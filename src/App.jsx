@@ -7,7 +7,7 @@ function App() {
 	return (
 		<Fragment>
 			<div className='container'>
-				<Movie id={5} />
+				{/* <Movie id={5} /> */}
 				<Counter />
 			</div>
 		</Fragment>

@@ -239,7 +239,7 @@ In the HTML markup of the functional component, create a button labeled "Increme
 import React, { Fragment, useState } from "react";
 
 function Counter(props) {
-	const [count, setState] = useState(0);
+	const [count, setCount] = useState(0);
 
 	return (
 		<Fragment>
@@ -256,4 +256,113 @@ export default Counter;
 
 Add the counter to [App.jsx][4] and save your changes to see the counter in the browser.
 
-# LEFT OFF AT 4:03.
+Now we can add another useState. This time add an input in the `counter-component` and add some text. Make this `useState` update a value based on the input. The file should now look as follows:
+
+```js
+import React, { Fragment, useState } from "react";
+
+function Counter(props) {
+	const [count, setCount] = useState(0);
+	const [name, setName] = useState("");
+
+	return (
+		<Fragment>
+			<div className='counter-container'>
+				<input type='text' onChange={(e) => setName(e.target.value)} />
+				<div>
+					{name} has clicked {count} times!
+				</div>
+				<button onClick={() => setState(count + 1)}>Increase</button>
+			</div>
+		</Fragment>
+	);
+}
+
+export default Counter;
+```
+
+Now test this and the text should update as you type into the input.
+
+> There's one rule. You can't call hooks inside loops, conditions, or nested functions.
+
+For example, we can't do the following thing:
+
+```js
+const [count, setCount] = useState(0);
+if (count == 0) {
+	const [name, setName] = useState("");
+}
+```
+
+Save the changes and note the error that comes up.
+
+The error: **React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render.**
+
+How does React know that the value `0` belongs to `count`? In other words, if React has some kind of storage, how does React know what value belongs to what variable. React relies on the order in which hooks are called. The first time it's called, React creates a state variable and stores it somewhere in memory, let's say an array. The second time we call useState, React creates another state variable. This is the reason why we cannot use this hook in if statements or loops.
+
+In the second render, the hook wouldn't get called because count got updated.
+
+> Mosh accidentally called the first useState hook as setState. This is a mistake because it's too generic. Typically you want to call the set function name with the name of the initial value. Therefore, it's best to put `setCount` instead.
+
+# The useEffect Hook
+
+In classes we have the following lifeCycle hooks:
+
+```js
+componentDidMount();
+componentDidUpdate();
+componentWillUnmount();
+```
+
+In functions we have the following hook:
+
+```js
+useEffect(func);
+```
+
+This one hook does the job of the three above. We pass a function that implements all the logic in a single place. Let's see this in code.
+
+`useEffect()` gets called every time the component renders. Type the following code in [Counter.jsx][3]:
+
+```js
+useEffect(() => {
+	document.title = `${name} has clicked ${count} times!`;
+});
+```
+
+We can supply a second argument to this function that is an array of dependencies. As previously said, this function gets called every time the component re-renders. That applies to the first render, when the state changes, or when a new prop gets passed. However, what if we don't want it to rerender every time for performance reasons? This is where we use an array of dependencies.
+
+This array will list all the state variables that our effect hook is dependent upon. For example, if we had `[count]`, that means that the function only gets called when the value of count gets changed. So if we change the name, the title of the document won't get changed. Save and test this yourself.
+
+The title of the tab only changes when the counter is clicked. When the name is changed, the useEffect function isn't called.
+
+### Cleanup Code
+
+There's one last lifecycle hook that gets called in a Class that we haven't covered in components yet. That hook is called componentWillUnmount. This is where we write cleanup code. When using the `useEffect()` hook, we can optionally return a function. In that function, we can write cleanup code. Any code that we previously wrote in componentWillUnmount, will be in that return.
+
+With this implementation we can see all the logic of a feature in one place and not spread over different lifecycle methods...
+
+Put a console in the return and you'll see the comment when it's doing the 'cleanup'.
+
+```js
+useEffect(() => {
+	document.title = `${name} has clicked ${count} times!`;
+
+	return () => {
+		console.log("Clean up...");
+	};
+});
+```
+
+Now whenever we increment count, we'll see the cleanup method.
+When there're no dependencies, the cleanup function gets called first, just in case the event is already happening. This can cause some performance penalties. For example, you don't want to disconnect a network connection every time the user types something in a text box. in those situations, we can pass a dependency array to prevent this from happening. As such:
+
+```js
+useEffect(() => {
+	document.title = `${name} has clicked ${count} times!`;
+
+	return () => {
+		console.log("Clean up...");
+	};
+}, []);
+```

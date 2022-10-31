@@ -1,13 +1,24 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 
 function Counter(props) {
-	const [count, setState] = useState(0);
+	const [count, setCount] = useState(0);
+	const [name, setName] = useState("");
+
+	useEffect(() => {
+		document.title = `${name} has clicked ${count} times!`;
+		return () => {
+			console.log("Clean up...");
+		};
+	}, [count]);
 
 	return (
 		<Fragment>
 			<div className='counter-container'>
-				<div>Counter: {count}</div>
-				<button onClick={() => setState(count + 1)}>Increase</button>
+				<input type='text' onChange={(e) => setName(e.target.value)} />
+				<div>
+					{name} has clicked {count} times!
+				</div>
+				<button onClick={() => setCount(count + 1)}>Increase</button>
 			</div>
 		</Fragment>
 	);
