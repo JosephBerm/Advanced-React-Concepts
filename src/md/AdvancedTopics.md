@@ -366,3 +366,31 @@ useEffect(() => {
 	};
 }, []);
 ```
+
+# Custom Hooks
+
+What you must do is to create a file in the [hooks](../hooks/) called `useDocumentTitle.js`. Cut out the useEffect function inside `Counter.jsx`. After cutting it, create an export default of a function called `useDocumentTitle` that takes in the title as an argument.
+Because I no longer have `useEffect` in [Counter.jsx][3], delete the import and put it at the top.
+The code should look as follows:
+
+```js
+import { useEffect } from "react";
+
+export default function useDocumentTitle(title) {
+	console.log("TITLE", title);
+	useEffect(() => {
+		document.title = title;
+		return () => {
+			console.log("Clean up...");
+		};
+	});
+}
+```
+
+Now I have a custom hook created. Import the custom hook at the top of [Counter.jsx][3]. Use the function and pass a title, as follows:
+
+```js
+useDocumentTitle(`${name} has clicked ${count} times!`);
+```
+
+# Fetching Data with Hooks
