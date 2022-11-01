@@ -394,3 +394,43 @@ useDocumentTitle(`${name} has clicked ${count} times!`);
 ```
 
 # Fetching Data with Hooks
+
+Let's say we wanted to fetch data from an api like the one found in [JSON PlaceHolder /users API](https://jsonplaceholder.typicode.com/users)'.
+
+Create new file in the hooks folder. Call this file: [Users.jsx](../hooks/Users.jsx). Inside this file, create a stateless functional component using the shortcut: `rsf`.
+
+> This creates the functional component and the import at the top.
+
+Inside this SFC, import and use the `useEffect` lifecycle hook. Inside the hook make the api call using axios. Axios must be installed and imported first. You have to await the request. However, you're unable to make the `useEffect` async so there's a workaround this. Inside the `useEffect` function make an async function. Call the function INSIDE the `useEffect` hook right after creating it.
+
+Set the users by setting it up with `useState` hook. It should look as follows:
+
+```js
+const [users, setUsers] = useState([]);
+```
+
+The `useEffect` hook should now look as follows:
+
+```js
+useEffect(() => {
+	async function getUsers() {
+		const { data } = await axios(`https://jsonplaceholder.typicode.com/users`);
+		setUsers(data);
+	}
+	getUsers();
+});
+```
+
+In the return statement of the functional component, return an unordered list of all the users retrieved from the api. Now go to [App.jsx][4] and it there so you can see the results.
+
+# Context
+
+If you've built enough apps on React you've come across something called **prop drilling**. This is when you have a value on a parent and you want to use it in a grandchild component. What you'd have to do is to pass the data to the child and the child would have to pass it to its child. On every level, you have to "drill a hole" to pass a prop. Over time, as the app grows and more components share the same data, this approach becomes unmaintainable and not scalable. Before context, Redux solved this problem and has additional features.
+
+With context, we have this concept called **Store**, which is an object which stores the global state of our application. So, the way it works is we can "store" some data in the global store and use it in a component way deeper in level of the tree.
+
+Basically any componenet can get data from the `store`. This is idea behind Redux. A few years later, React introduced this new concept called `Context`. With context, we can pass data down our component tree without prop drilling. So, in component 1, you create a context and in the third component you use the data inside the context.
+
+First lets use context in class components than in functional components.
+
+# Context in Class Components
