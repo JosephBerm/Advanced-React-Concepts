@@ -434,3 +434,16 @@ Basically any componenet can get data from the `store`. This is idea behind Redu
 First lets use context in class components than in functional components.
 
 # Context in Class Components
+
+Create a new folder in the `src` folder and call it `context`. Inside this folder, create two new files, one called "MovieList.jsx" and "MoviePage.jsx". Create a class inside them by typing `rcc` and tabbing. Inside the MovieList componenet, just put a _lorem 10_ or anything. Inside `MoviePage.jsx` render `MovieList`.
+
+> I've also changed the way App.jsx looks because the file is created as a function by default. I typed `rcc` and pasted the contents inside the class.
+
+...
+Time stamp: 1:30
+...
+
+# SHORTCUTS
+
+- `rsf` for functional components
+- `rcc` for classes.
