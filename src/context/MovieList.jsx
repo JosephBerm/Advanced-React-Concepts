@@ -1,8 +1,9 @@
 import React, { Component } from "react";
+import UserContext from "./userContext";
 
 class MovieList extends Component {
 	render() {
-		return <div>Movie List</div>;
+		return <UserContext.Consumer>{(userContext) => <div>Movie List</div>}</UserContext.Consumer>;
 	}
 }
 

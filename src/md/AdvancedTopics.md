@@ -439,9 +439,71 @@ Create a new folder in the `src` folder and call it `context`. Inside this folde
 
 > I've also changed the way App.jsx looks because the file is created as a function by default. I typed `rcc` and pasted the contents inside the class.
 
-...
-Time stamp: 1:30
-...
+Now if you open DevTools, you'll be able to see the component tree. If you want to store information about the user at the App level, what do you do to pass it down the tree without setting it to props all the way down?
+
+Create a state in App.jsx. As follows:
+
+```js
+state = {
+	currentUser: { name: "Joseph" },
+};
+```
+
+Create a new file in the context folder, call it [userContext.js](./../context/userContext.js). This is a context that will be used when you want to pass information about the user. In a real application, you can have different kinds of context. So, we use the user context to share the current user, we have have a theme context for sharing the currentTheme, and so on...
+
+In this file, import react and call `createContext()` from `React`. This call returns a context object. **By convention, we should name these contexts with pascal notation, the same way we name our components.** The file should look as follows:
+
+```js
+import React from "react";
+
+const UserContext = React.createContext();
+
+export default UserContext;
+```
+
+Now that you're exporting this context, go to [App.js][4]. Import this new context at the top. After importing, wrap the `div.container` inside an element utilizing the UserContext import. It should also use the Providor class. When you type the **`.`** you should see it in your recommendations from intellisense. It should look as follows when done:
+
+```js
+state = {
+	currentUser: { name: "Joseph" },
+};
+
+<UserContext.Provider value={this.state.currentUser}>
+	<div className='container'>
+		{/* <Movie id={5} /> */}
+		{/* <Counter /> */}
+		{/* <Users /> */}
+		<MoviePage />
+	</div>
+</UserContext.Provider>;
+```
+
+Now, go to wherever you want to use it. In this case, it'll be [MovieList.jsx](./../context/MovieList.jsx)'. Import `UserContext` at the top. Extract everything in the return with a `control + x` with your keyboard. Inside the return, insert the following code snippet:
+
+```js
+<UserContext.Consumer></UserContext.Consumer>
+```
+
+You DON'T past it yet. Why? Well, this UserContext. Consumer element is expecting a function as a child, so we can't pass it that div. So, what we can do is create a lambda function inside curley braces and then paste your code inside the return of the function. It should look as follows:
+
+```js
+import React, { Component } from "react";
+import UserContext from "./userContext";
+
+class MovieList extends Component {
+	render() {
+		return <UserContext.Consumer>{(userContext) => <div>Movie List</div>}</UserContext.Consumer>;
+	}
+}
+
+export default MovieList;
+```
+
+Now look at the component tree in DevTools.
+
+```
+TIME STAMP I LEFT IT OFF IN IS 6:00!!!
+```
 
 # SHORTCUTS
 
