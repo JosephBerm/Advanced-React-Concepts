@@ -1,9 +1,18 @@
 We'll be going over Higher Order Components, Hooks, and Context.
 
+# SHORTCUTS
+
+- **`rsf`** for functional components. The acronym stands for **React Stateless Function**.
+- **`rcc`** for classes.
+
 [1]: ../hoc/Movie.jsx
 [2]: ../hoc/withToolTip.jsx
 [3]: ../hooks/Counter.jsx
 [4]: ../App.jsx
+[5]: ../context/userContext.js
+[6]: ../context/MovieRow.jsx
+[7]: ../context/MovieList.jsx
+[8]: ../context/MoviePage.jsx
 
 # Setting Up the Development Environment
 
@@ -156,7 +165,7 @@ class Movie extends Component {
 export default withToolTip(Movie);
 ```
 
-When you save your changes, you should see the words "Some tooltip" appear when hovering over "Movie". However, there's still a problem with this implementation. When you go back to App.js and you pass a prop to the Movie componenet, the prop doesn't actually get passed. It's missing. You can know this by using the Devtools and going into the React Componenets tab.
+When you save your changes, you should see the words "Some tooltip" appear when hovering over "Movie". However, there's still a problem with this implementation. When you go back to App.js and you pass a prop to the Movie component, the prop doesn't actually get passed. It's missing. You can know this by using the Devtools and going into the React Components tab.
 
 **This is happening because we forgot to pass the props to our higher order component.**
 
@@ -174,17 +183,17 @@ render() {
 
 Now when we save the changes, you should be able to see the prop that was passed into the Movie component.
 
-**So, in order implement a higher order component, we create a new function that takes in an existing component and returns a new component. In this case we're returning a class component but we can also return a functional component. All we're doing here is implementing some logic and we're sharing this logic across different componenets.**
+**So, in order implement a higher order component, we create a new function that takes in an existing component and returns a new component. In this case we're returning a class component but we can also return a functional component. All we're doing here is implementing some logic and we're sharing this logic across different components.**
 
 # Hooks
 
-_Towards the beginning of the course, Mosh mentioned the difference between Functional Componenets and Class Components. The difference was that funcitonal components were stateless and Class Componenets were not. So, if you wanted to store some state, you want to use a Class... right?_
+_Towards the beginning of the course, Mosh mentioned the difference between Functional Components and Class Components. The difference was that funcitonal components were stateless and Class Components were not. So, if you wanted to store some state, you want to use a Class... right?_
 
 **Since React 16.8, this is no longer valid. In 16.8 we got a new feature called Hooks.**
 
-Hooks allow us to build functional components with all the features we have in class componenets. So, we can use state and lifecycle features of class componenets.
+Hooks allow us to build functional components with all the features we have in class components. So, we can use state and lifecycle features of class components.
 
-Hooks in a functional componenet can be cleaner to use and can take less lines of code. It also looks less confusing than using a Class.
+Hooks in a functional component can be cleaner to use and can take less lines of code. It also looks less confusing than using a Class.
 
 # The useState Hook
 
@@ -215,7 +224,7 @@ function Counter(props) {
 export default Counter;
 ```
 
-In class componenets we also have a method called `this.setState()`, that we inherit from the base component class in React. However, here we don't have inheritance. That's why we don't have a setState method inside the function component. So, how're we going to update the value of our counter?
+In class components we also have a method called `this.setState()`, that we inherit from the base component class in React. However, here we don't have inheritance. That's why we don't have a setState method inside the function component. So, how're we going to update the value of our counter?
 
 The `useState()` function is an array with **TWO** items. The first being the value of our counter. The second item is a function for updating this value. That is equivalent to **this.setState()** in a class. Lets set it in a constant called `setState`.
 
@@ -330,7 +339,7 @@ useEffect(() => {
 });
 ```
 
-We can supply a second argument to this function that is an array of dependencies. As previously said, this function gets called every time the component re-renders. That applies to the first render, when the state changes, or when a new prop gets passed. However, what if we don't want it to rerender every time for performance reasons? This is where we use an array of dependencies.
+We can supply a second argument to this function that is an array of dependencies. As previously said, this function gets called every time the component re-renders. That applies to the first render, when the state changes, or when a new prop gets passed. **However, what if we don't want it to rerender every time for performance reasons?** This is where we use an array of dependencies.
 
 This array will list all the state variables that our effect hook is dependent upon. For example, if we had `[count]`, that means that the function only gets called when the value of count gets changed. So if we change the name, the title of the document won't get changed. Save and test this yourself.
 
@@ -429,13 +438,13 @@ If you've built enough apps on React you've come across something called **prop 
 
 With context, we have this concept called **Store**, which is an object which stores the global state of our application. So, the way it works is we can "store" some data in the global store and use it in a component way deeper in level of the tree.
 
-Basically any componenet can get data from the `store`. This is idea behind Redux. A few years later, React introduced this new concept called `Context`. With context, we can pass data down our component tree without prop drilling. So, in component 1, you create a context and in the third component you use the data inside the context.
+Basically any component can get data from the `store`. This is idea behind Redux. A few years later, React introduced this new concept called `Context`. With context, we can pass data down our component tree without prop drilling. So, in component 1, you create a context and in the third component you use the data inside the context.
 
 First lets use context in class components than in functional components.
 
 # Context in Class Components
 
-Create a new folder in the `src` folder and call it `context`. Inside this folder, create two new files, one called "MovieList.jsx" and "MoviePage.jsx". Create a class inside them by typing `rcc` and tabbing. Inside the MovieList componenet, just put a _lorem 10_ or anything. Inside `MoviePage.jsx` render `MovieList`.
+Create a new folder in the `src` folder and call it `context`. Inside this folder, create two new files, one called [MovieList.jsx][7] and [MoviePage.jsx][8]. Create a class inside them by typing `rcc` and tabbing. Inside the `MovieList` component, just put a _lorem 10_ or anything. Inside `MoviePage.jsx` render `MovieList`.
 
 > I've also changed the way App.jsx looks because the file is created as a function by default. I typed `rcc` and pasted the contents inside the class.
 
@@ -507,7 +516,7 @@ Now look at the component tree in DevTools.
 
 Below `App`, we have the context provider. However, as we develop in the project, we create many context providers. For that reason we must give it a name. It is good practice to give these context providors a name.
 
-Go to [userContext](../context/userContext.js) file and after creating the context object, set the display name to something like "userContext". This can be done as follows:
+Go to [userContext][5] file and after creating the context object, set the display name to something like "userContext". This can be done as follows:
 
 ```js
 import React from "react";
@@ -519,7 +528,7 @@ UserContext.displayName = "UserContext";
 export default UserContext;
 ```
 
-Now go into DevTools and look at what the context is now called. Click on the context. Inside it, you should now see the object that you created and provided in [App.js][4]. You can now use inside the function that consumes it. Go to MovieList class and user it inside the markup as follows:
+Now go into DevTools and look at what the context is now called. Click on the context. Inside it, you should now see the object that you created and provided in [App.js][4]. You can now use inside the function that consumes it. Go to MovieList class and use it inside the markup as follows:
 
 ```js
 class MovieList extends Component {
@@ -533,9 +542,189 @@ class MovieList extends Component {
 }
 ```
 
-LEFT OFF AT 7:40
+**What if you want to consume this context outside of the render method?** Let's say in one of the lifecycle hooks, such as `ComponentDidMount()`. In that method, you don't have access to the user component in the return.
 
-# SHORTCUTS
+This is pretty easy.
 
-- `rsf` for functional components
-- `rcc` for classes.
+First, after creating the class, we need to set one of its static properties. We're going to set the context type of this class. This is done the following way:
+
+```js
+MovieList.contextType = UserContext;
+```
+
+> This is what Mosh means by a static property. A property that belongs to a class not an object. It's set to `UserContext`, which we imported at the top.
+
+Try this out in [MovieList.jsx][7]. You want to put this part of the code typically at the bottom of the page, below the class but above the export. Now in `componentDidMount()`, log the context in the following way:
+
+```js
+componentDidMount() {
+	console.log("context", this.context);
+}
+```
+
+After saving and reloading take a look at the console. Now you should be able to see the context object with the set properties provided by the `UserContext.Provider` element.
+
+In a real world application, we can make certain decisions in this component based on the current user.
+
+**There is another way to set a contextType property in a class.** Instead of setting it after the class has been created, _we can set it as part of creating the class_.
+
+So, lets delete that line and go to the top of the class. On the very next line of the class being created type the following code:
+
+```js
+class MovieList extends Component {
+	static contextType = userContext;
+
+	componentDidMount() {
+		console.log("context", this.context);
+	}
+}
+```
+
+> The `static` keyword is saying that we're setting a static property in this class.
+
+Some people prefer the second approach, other people prefer to explicitly set it after creating the class component.
+
+# Context in Functional Components
+
+Now we're going to learn how to use the context API in functional components. According to Mosh, this method is much easier than in class components.
+
+We're going to introduce a new component in the component Tree. We're going to add a component called [movieRow][6]. The `movieList` component can have one or more `movieRow` components.
+
+Functional Components have a hook that pertains to functional components only. This hook is called `useContext`. Import it in the same line as React is imported. Also import the [UserContext][5] that we've created already.
+
+In the `MovieRow` function, first we're going to call `useContext` and pass the `userContext` as an argument. This contains our `userContext` object which is our current user. You can use it in the following manner:
+
+```js
+import React, { useContext } from "react";
+import UserContext from "./userContext";
+
+function MovieRow(props) {
+	const currentUser = useContext(UserContext);
+	console.log("context", currentUser);
+
+	return <div>{currentUser.name}</div>;
+}
+
+export default MovieRow;
+```
+
+Now let's go to our [MovieList][7] component and add a `MovieRow` component. Inside the div, after displaying the name of the user, add a `movieRow` component. The render method should look as follows:
+
+```js
+render() {
+		return (
+			<UserContext.Consumer>
+				{(userContext) => (
+					<div>
+						Movie List With {userContext.name}
+						<MovieRow />
+					</div>
+				)}
+			</UserContext.Consumer>
+		);
+	}
+```
+
+Save your changes and go into DevTools. Look at the component tree. There is no `UserContext.Consumer` component under the `MovieRow` component. For the `MovieList` class there was a `UserContext.Consumer` component below it but not for the functional component and that's because the class is using a consumer component. This gives us an extra child.
+
+This is an immediate advantage because over time the hierarchy becomes more convoluted. If you use functional components, you're not going to see this consumer component in the component tree.
+
+Also, the console displayed the user as created inside [MovieRow][6].
+
+A side-by-side comparison of both implementation shows how much more simple it is to use a functional component.
+
+In the class we had to set a static property, in the return of the render we have to use the `UserContext.Consumer` element (making our heirarchy more convoluted), and inside the element we had to pass a function as a lamda expression. This function distracts the reader of the code from seeing the actual content of this method. **It's introducing extra complexity.**
+
+On the contrary, in the functional component, all we had to do was call the hook `useContext`.
+
+## **Going forward, prefer functional components over class components.**
+
+# Updating The Context
+
+**What if you want to update the context?** In this app, we're assuming the user is already logged in. We're going to change this behavior and simulate the scenario where the user is not logged in. Then we're going to build a log in component with a button. When you press the button, the user will log in with the name of the user rendered.
+
+Look at our app component, in [App.jsx][4]. In the `UserContext.Providor` component, we're providing an object which is part of the state of the app component.
+
+Forget about the context for a second. **How can we update the state of a component higher in the component tree?**
+
+Since we're already passing the state as an object, we should also provide methods for updating the state. Then we pass those methods as props for child component. Create a method in this class called `handledLoggedIn`. As follows:
+
+```js
+handleLoggedIn = (username) => {
+	console.log(`Getting the user: ${username}`);
+	const user = { name: "Joseph" };
+
+	this.setState({ currentUser: user });
+};
+```
+
+Now we have a method for updating the state. We should pass this method just like the currentUser is being passed using our `ContextObject`. Let's change the structure of the object. Instead of only passing one property, let's pass an object with both properties in it. as follows:
+
+```js
+class App extends Component {
+	handleLoggedIn = (username) => {
+		console.log(`Getting the user: ${username}`);
+		const user = { name: "Joseph" };
+
+		this.setState({ currentUser: user });
+	};
+
+	state = {
+		currentUser: { name: "Joseph" },
+	};
+
+	render() {
+		return (
+			<UserContext.Provider
+				value={{
+					currentUser: this.state.currentUser,
+					onLoggedIn: this.handleLoggedIn,
+				}}>
+				<div className='container'>
+					{/* <Movie id={5} /> */}
+					{/* <Counter /> */}
+					{/* <Users /> */}
+					<MoviePage />
+				</div>
+			</UserContext.Provider>
+		);
+	}
+}
+```
+
+Now we should modify our child components because we have changed the structure of the object we're passing down. Go to [MovieList][7]. Now in the render return, there is no longer a `name` in the `UserContext`, instead we have an object.
+
+We must extract the name from the object but we must check if name is not null in the object in order to display it. If not null, display it, if null, display an empty string as follows:
+
+```js
+<UserContext.Consumer>
+	{(userContext) => (
+		<div>
+			Movie List With {userContext.currentUser ? userContext.currentUser.name : ""}
+			<MovieRow />
+		</div>
+	)}
+</UserContext.Consumer>
+```
+
+We must make the same adjustment for [MovieRow][6].
+
+Rename the const from `currentUser` to `userContext`. If not, we'll end up with `currentUser.currentUser.name` and that sounds redundant. After renaming it, insert the same ternary operator as the one above inside the return of this function. The function should now look as follows:
+
+```js
+function MovieRow(props) {
+	const userContext = useContext(UserContext);
+	console.log("context", userContext);
+
+	return (
+		<div>
+			Movie Row With {userContext.currentUser ? userContext.currentUser.name : ""}
+		</div>
+	);
+}
+```
+
+We haven't implemented the concept of updating the context yet. We've simply changed the structure of the context object.
+
+**LEFT OFF AT 4:25**
+Now to update the context...
