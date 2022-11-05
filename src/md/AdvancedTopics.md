@@ -478,13 +478,13 @@ state = {
 </UserContext.Provider>;
 ```
 
-Now, go to wherever you want to use it. In this case, it'll be [MovieList.jsx](./../context/MovieList.jsx)'. Import `UserContext` at the top. Extract everything in the return with a `control + x` with your keyboard. Inside the return, insert the following code snippet:
+Now, go to wherever you want to **consume** the user context. In this case, it'll be [MovieList.jsx](./../context/MovieList.jsx)'. Import `UserContext` at the top. Extract everything in the return with a `control + x` with your keyboard. Inside the return, insert the following code snippet:
 
 ```js
 <UserContext.Consumer></UserContext.Consumer>
 ```
 
-You DON'T past it yet. Why? Well, this UserContext. Consumer element is expecting a function as a child, so we can't pass it that div. So, what we can do is create a lambda function inside curley braces and then paste your code inside the return of the function. It should look as follows:
+You DON'T past it yet. Why? Well, this `UserContext.Consumer` element is expecting a function as a child, so we can't pass it that div. So, what we can do is create a lambda function inside curley braces and then paste your code inside the return of the function. It should look as follows:
 
 ```js
 import React, { Component } from "react";
@@ -492,7 +492,11 @@ import UserContext from "./userContext";
 
 class MovieList extends Component {
 	render() {
-		return <UserContext.Consumer>{(userContext) => <div>Movie List</div>}</UserContext.Consumer>;
+		return (
+			<UserContext.Consumer>
+				{(userContext) => <div>Movie List</div>}
+			</UserContext.Consumer>
+		);
 	}
 }
 
@@ -501,9 +505,35 @@ export default MovieList;
 
 Now look at the component tree in DevTools.
 
+Below `App`, we have the context provider. However, as we develop in the project, we create many context providers. For that reason we must give it a name. It is good practice to give these context providors a name.
+
+Go to [userContext](../context/userContext.js) file and after creating the context object, set the display name to something like "userContext". This can be done as follows:
+
+```js
+import React from "react";
+import UserContext from "./userContext";
+
+const UserContext = React.createContext();
+UserContext.displayName = "UserContext";
+
+export default UserContext;
 ```
-TIME STAMP I LEFT IT OFF IN IS 6:00!!!
+
+Now go into DevTools and look at what the context is now called. Click on the context. Inside it, you should now see the object that you created and provided in [App.js][4]. You can now use inside the function that consumes it. Go to MovieList class and user it inside the markup as follows:
+
+```js
+class MovieList extends Component {
+	render() {
+		return (
+			<UserContext.Consumer>
+				{(userContext) => <div>Movie List With {userContext.name}</div>}
+			</UserContext.Consumer>
+		);
+	}
+}
 ```
+
+LEFT OFF AT 7:40
 
 # SHORTCUTS
 
