@@ -13,6 +13,8 @@ We'll be going over Higher Order Components, Hooks, and Context.
 [6]: ../context/MovieRow.jsx
 [7]: ../context/MovieList.jsx
 [8]: ../context/MoviePage.jsx
+[9]: ../context/Login.jsx
+[10]: ../context/cartContext.js
 
 # Setting Up the Development Environment
 
@@ -726,5 +728,139 @@ function MovieRow(props) {
 
 We haven't implemented the concept of updating the context yet. We've simply changed the structure of the context object.
 
-**LEFT OFF AT 4:25**
-Now to update the context...
+Now to update the context let's add a new component called [Login][9] and use the `rsf` shortcut to create a stateless function. Inside the return of the component, put a button. This will be doing the logging in when the user clicks it. The function for updating the `userContext` is inside the its object. Therefore, you must import the `useContext` hook and you must also import [UserContext][5].
+
+Now make a `const` using the context of `UserContext` and use the function inside the object. Your code should look as follows:
+
+```js
+import React, { useContext } from "react";
+import UserContext from "./userContext";
+
+function Login(props) {
+	const userContext = useContext(UserContext);
+	return (
+		<div>
+			<button onClick={() => userContext.onLoggedIn("username")}>Login</button>
+		</div>
+	);
+}
+
+export default Login;
+```
+
+> The reason we're passing "username" to the function is because this is actually just a placeholder for what it's really supposed to be. This is really just supposed to be an object with the username and password. After sending the 'username' and 'password', the function makes an api call using these credentials and then updates the `currentUser` property of the `UserContext` object.
+
+In [App.js][4], the moment the state is updated, the value prop will also be updated. That's because we're updating the `currentUser` property. This causes a re-render of this component.
+
+Fix the state of the class component so that the currentUser's default value is equal to null. This will get changed when the user clicks the Login button and the name is filled in. Since it's null by default, the sentences show nothing. This is because the ternary operator returns an empty string. But because the value gets updated on login, the userContext gets updated.
+
+Your code should look as follows:
+
+```js
+class App extends Component {
+	state = {
+		currentUser: null,
+	};
+
+	handleLoggedIn = (username) => {
+		console.log(`Getting the user: ${username}`);
+		const user = { name: "Joseph" };
+
+		this.setState({ currentUser: user });
+	};
+
+	render() {
+		return (
+			<UserContext.Provider
+				value={{
+					currentUser: this.state.currentUser,
+					onLoggedIn: this.handleLoggedIn,
+				}}>
+				<div className='container'>
+					<MoviePage />
+					<Login />
+				</div>
+			</UserContext.Provider>
+		);
+	}
+}
+```
+
+# Consuming Multiple Contexts
+
+As your application grows, you may want different kinds of context. Let's add a shopping cart context. This is not something you want to add to the existing `userContext`. So, add a new file to the `context` folder called [cartContext.js][10].
+
+To save time, copy the code from `userContext` and paste it inside this file. Rename all the `userContext` things to `cartContext`. It should look as follows:
+
+```js
+import React from "react";
+
+const CartContext = React.createContext();
+CartContext.displayName = "CartContext";
+
+export default CartContext;
+```
+
+Now we need to provide this context in the app component or any component that wants to share a shopping cart object to its child componenets. Let's go to [app.js][4] and import `cartContext`. Now, in our render method, just how we provided a `UserContext.Providor` element, we're going to also provide a `CartContext.Providor` element. So create the div and wrap everything around it. So, you're providing two different context. Now give it a value of an object with a `cart` propert set to null. Your [app.js][4] should look as follows:
+
+```js
+import "./App.css";
+import React, { Component, Fragment } from "react";
+
+import MoviePage from "./context/MoviePage";
+import CartContext from "./context/cartContext";
+import UserContext from "./context/userContext";
+import Login from "./context/Login";
+
+class App extends Component {
+	state = {
+		currentUser: null,
+	};
+
+	handleLoggedIn = (username) => {
+		console.log(`Getting the user: ${username}`);
+		const user = { name: "Joseph" };
+
+		this.setState({ currentUser: user });
+	};
+
+	render() {
+		return (
+			<CartContext.Provider value={{ cart: [] }}>
+				<UserContext.Provider
+					value={{
+						currentUser: this.state.currentUser,
+						onLoggedIn: this.handleLoggedIn,
+					}}>
+					<div className='container'>
+						<MoviePage />
+						<Login />
+					</div>
+				</UserContext.Provider>
+			</CartContext.Provider>
+		);
+	}
+}
+
+export default App;
+```
+
+Now go to [MovieRow][6]. Now you're going to consume the `cartContext` using the `useContext` hook. Duplicate the `userContext` line and change it to use the `cartContext`. Log the `cartContext` in the console. Your code should now look as follows:
+
+```js
+function MovieRow(props) {
+	const userContext = useContext(UserContext);
+	const cartContext = useContext(CartContext);
+
+	console.log("cart context", cartContext);
+	return (
+		<div>
+			Movie Row With {userContext.currentUser ? userContext.currentUser.name : ""}
+		</div>
+	);
+}
+```
+
+In the console, you should now see the `CartContext` object and the empty shopping cart array inside it.
+
+# CONGRATULATIONS, YOU ARE DONE WITH REACT!!!

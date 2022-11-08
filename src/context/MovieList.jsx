@@ -5,9 +5,7 @@ import MovieRow from "./MovieRow";
 class MovieList extends Component {
 	static contextType = UserContext;
 
-	componentDidMount() {
-		console.log("context", this.context);
-	}
+	componentDidMount() {}
 
 	render() {
 		return (
