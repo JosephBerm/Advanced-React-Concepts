@@ -432,7 +432,7 @@ useEffect(() => {
 });
 ```
 
-In the return statement of the functional component, return an unordered list of all the users retrieved from the api. Now go to [App.jsx][4] and it there so you can see the results.
+In the return statement of the functional component, return an unordered list of all the users retrieved from the api. Now go to [App.jsx][4] and place it there so you can see the results.
 
 # Context
 
